@@ -14,9 +14,21 @@ class ProjectStructure:
         self.chunks = chunks
         self.LTRh_tmp = self._getLTRharvestOutDir() # all LTRharvest files dictionary where chunk is a key
         self.genomes_tmp = self._getGenomeFile() #ids for all genome fasta where chunk is a key\
-        #self.LTRharvest_out_files_suffixes = ['_LTRs_inner.fas','_LTRs.gff3','.fa']
         self.LTRharvest_gff3 = '_LTRs.gff3'
+        self.ltr_3 = {} # dictionary created after LTRdigest will be run. {chunk:ltr_3 fasta file, ... }
+        self.ltr_5 = {} # dictionary created after LTRdigest will be run. {chunk:ltr_5 fasta file, ... }
+        self.merged_3 = self.root + "/3_LTR_merged.fasta"
+        self.merged_5 = self.root + "/5_LTR_merged.fasta"
+        self.insertion_time_tab = self.root + "/Insertion_time.tab"
+        self.cd_hit_results = self.root + "/cdhit.clstr"
+        self.parsed_cd_hit_out = self.cd_hit_results + '._parsed.tab'
+
     def _getLTRharvestOutDir(self):
+        """
+        :return: dictionary where key is chunk number and
+        value is full path to the LTRharvest output folder for this chunk.
+        like: root/chunk/tmp_LTRharvest
+        """
         name_getLTRharvestOutDir = "tmp_LTRharvest"
         toret = {}
         if len(self.chunks) == 1:
@@ -28,8 +40,8 @@ class ProjectStructure:
 
         for tmp in toret:
             self._isExistCreate(toret[tmp])
-
         return toret
+
     def _getGenomeFile(self):
         toret = {}
         if len(self.chunks) == 1:
@@ -42,13 +54,16 @@ class ProjectStructure:
     def _isExistCreate(self, directory):
         if not os.path.isdir(directory):
             os.system('mkdir {}'.format(directory))
-
         return directory
+
+    def addLTRfastaPath(self, chunk, ltr_fasta):
+        self.ltr_3[chunk] = self.genomes_tmp[chunk] + ".idx_3ltr.fas"
+        self.ltr_5[chunk] = self.genomes_tmp[chunk] + ".idx_5ltr.fas"
 
 
     def __str__(self):
         return "root directoty: {0} \n" \
-               "tmp files \n{1}" \
+               "tmp files \n{1}\n" \
                "Table with primers \n".format(self.root,
                          "\n".join(["\t\t\t" + self.LTRh_tmp[i] for i in self.LTRh_tmp])
                          )

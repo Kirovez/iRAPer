@@ -35,10 +35,10 @@ class Cluster():
         return cl + "\n"
 
 class CdHit_clustering():
-    def __init__(self, CLSTR_FILE):
+    def __init__(self, CLSTR_FILE,  outFile):
         self.CLSTR_FILE = CLSTR_FILE
         self.Clusters_list = []
-        self.outTab = self.CLSTR_FILE + "_out.tab"
+        self.outTab = outFile
         self.parseResults()
         self.getOutFile()
 
@@ -66,5 +66,5 @@ class CdHit_clustering():
             for clusters in self.Clusters_list:
                 outFile.write(clusters.getLines())
 
-cl = CdHit_clustering('3_LTR_merged.clstr')
-print("Maximum sequences ({}) in cluster ".format(len(cl.getMaximumCluster())), cl.getMaximumCluster().id)
+#cl = CdHit_clustering('3_LTR_merged.clstr')
+#print("Maximum sequences ({}) in cluster ".format(len(cl.getMaximumCluster())), cl.getMaximumCluster().id)

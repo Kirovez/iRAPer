@@ -1,5 +1,6 @@
 from Bio import SeqIO
 from bin.messager import *
+
 def genomeSplitterIndex(fasta, size = 100):
     """
     function to estimate number of chunks genome split to ..
