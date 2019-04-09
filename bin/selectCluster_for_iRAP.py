@@ -1,7 +1,11 @@
 from collections import defaultdict
 from Bio import SeqIO
 
+
+
+
 def selectClusters_and_LTRs(clstr_tab, ins_tab, ltr_fasta3, ltr_fasta5, outFile_tab, outFile_Fasta3, outFile_Fasta5,
+                            ltrs_isFull, ltrs_Classification,
                             min_seq_in_cluster = 10,
                             min_percent_young = 70,
                             ins_time_cutoff = 1500000):
@@ -17,9 +21,18 @@ def selectClusters_and_LTRs(clstr_tab, ins_tab, ltr_fasta3, ltr_fasta5, outFile_
 
         ### estimate age
         ins_time = {} #seq.id = age
+
+        ###classification
+        class_te = ltrs_Classification #seq.id = classification
+
+        ###is FUll or not
+        isFull_te = ltrs_isFull #seq.id = isFull (True, False)
+
         for lines in ins_t:
             sp = lines.rstrip().split('\t')
             ins_time[sp[0]] = int(sp[1])
+            ids = sp[0].split("_")
+            chromosome, start, end = ids[0], ids[-1], ids[-2]
 
         ### select clusters
         cnt_c_s = 0
@@ -44,16 +57,34 @@ def selectClusters_and_LTRs(clstr_tab, ins_tab, ltr_fasta3, ltr_fasta5, outFile_
                         selected[sp[-3]] = sp[1]
         print("Number of clusters after filtering by cluster size (>={0}) is {1}".format(min_seq_in_cluster, len(cluster_seqs_age)))
 
+        #######filter by classification and isFull
+        TE_class_isFull_selected = {}
+        full_per_cluster = {}
+        classification_per_cluster = {}
+        for cluster in selected:
+            isFUll = [isFull_te[id] for id in seq_per_cluster[cluster]]
+            full_per_cluster[cluster] = "{0} of {1}".format(isFUll.count('True'), len(isFUll))
+
+            classification = [class_te[id] for id in seq_per_cluster[cluster]]
+            classification_per_cluster[cluster] = ";".join([i for i in set(classification)])
+            # select cluster if not all TEs in it are truncated and at least on is full
+
+            print(isFUll.count('True'))
+            print(classification.count("truncated TE"))
+            if isFUll.count('True') > 0 and classification.count("truncated TE") != len(seq_per_cluster[cluster]):
+                TE_class_isFull_selected[cluster] = 0
+
+        print("Number of clusters after filtering by TE structure and classification is {0}".format(len(TE_class_isFull_selected)))
 
         ### select clusters with percentage of you TE < min_percent_young
         cnt = 0
-        out.write("\t".join(["Cluster", "Seq.id", "Is.leading", "Cluster size", "Percentage of young TEs"]) + "\n")
+        out.write("\t".join(["Cluster", "Seq.id", "Is.leading", "Cluster size", "Percentage of young TEs", "Percentage of Full TEs", "Classification"]) + "\n")
         for clusters in cluster_seqs_age:
             percent_young = cluster_seqs_age[clusters].count(True)*100/len(cluster_seqs_age[clusters])
-            if percent_young > min_percent_young:
+            if percent_young > min_percent_young and clusters in TE_class_isFull_selected:
                 cnt += 1
-                print(clusters)
                 is_leading = True
+
                 # if leading sequence is available for this cluster take one
                 if clusters in selected:
                     print("leading sequence: ",selected[clusters])
@@ -65,7 +96,14 @@ def selectClusters_and_LTRs(clstr_tab, ins_tab, ltr_fasta3, ltr_fasta5, outFile_
                     seq_id = seq_per_cluster[clusters][2]
 
                 out.write(
-                    "\t".join([clusters, seq_id, str(is_leading), str(len(seq_per_cluster[clusters])), str(round(percent_young,2))]) + "\n")
+                    "\t".join([clusters, seq_id,
+                               str(is_leading),
+                               str(len(seq_per_cluster[clusters])),
+                               str(round(percent_young,2)),
+                               full_per_cluster[clusters],
+                               classification_per_cluster[clusters]]
+                              ) +
+                    "\n")
                 SeqIO.write(seq_ind3[seq_id], outFasta3, "fasta")
                 SeqIO.write(seq_ind5[seq_id], outFasta5, "fasta")
         print("Number of clusters after filtering by cluster size and percentage of young TEs in a cluster is {0}".format(cnt))

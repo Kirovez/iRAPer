@@ -18,11 +18,13 @@ class LTR_InsertionTimeCalculator():
         self.r_parameter = 9.4E-09
         self.clustalW2 = "clustalw"
         self.outFile_tab = outFile_tab
+        self.ins_time = {}
         self.run()
 
     def run(self):
         cnt_l = 0
         cnd_paired = 0
+        ins_time = {}
         print("r", self.r_parameter)
         with open(self.outFile_tab, "w") as outfile:
             for seq1 in SeqIO.parse(self.fasta_LTR_left, "fasta"):
@@ -33,10 +35,11 @@ class LTR_InsertionTimeCalculator():
                     seq2 = self.fasta_LTR_right[seq1.id]
                     insertion_time = self.align2sequnces(seq1, seq2) # it will align and parse the aligned sequences to insertion time calculation
                     outfile.write(seq2.id + "\t" + str(insertion_time) + "\n")
-
+                    ins_time[seq2.id] = str(insertion_time)
             print("Number of sequences in left file: ", cnt_l)
             print("Number of sequences in right file: ", len(self.fasta_LTR_right))
             print("Number of valid pairs found: ", cnd_paired)
+        self.ins_time = ins_time
 
     def align2sequnces(self,seq1, seq2):
         insertion_time = 0

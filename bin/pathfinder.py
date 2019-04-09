@@ -25,7 +25,8 @@ class ProjectStructure:
         self.merged_5 = self.root + "/5_LTR_merged.fasta"
         self.insertion_time_tab = self.root + "/Insertion_time.tab"
         self.cd_hit_results = self.root + "/cdhit.clstr"
-        self.parsed_cd_hit_out = self.cd_hit_results + '._parsed.tab'
+        self.cd_hit_fasta = self.root + "/cdhit"
+        self.parsed_cd_hit_out = self.cd_hit_results + '_parsed.tab'
         self.selection_tab_cluster = self.root + "/selected_clusters.info"
         self.selection_sequence3_per_cluster = self.root + "/selected_LTR_3_sequences.fasta"
         self.selection_sequence5_per_cluster = self.root + "/selected_LTR_5_sequences.fasta"
