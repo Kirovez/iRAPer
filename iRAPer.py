@@ -102,10 +102,13 @@ class iRAPer():
 
 
     def runBLAST(self):
+        os.system("makeblastdb -in {0} -out {0}-dbtype nucl".format(self.project_structure.genome_blastDB))
         os.system("blastn -query {0} "
-                  "-db /home/ikirov/retrotranscriptome/Genomes/sunflower_HA1.0.fasta -outfmt 5 "
-                  "-out {1} -evalue 0.000001 "
-                  "-window_size 22 -num_threads 20".format(self.project_structure.selection_sequence_per_cluster, self.project_structure.BLAST_xml))
+                  "-db {1} -outfmt 5 "
+                  "-out {2} -evalue 0.000001 "
+                  "-window_size 22 -num_threads 20".format(self.project_structure.selection_sequence_per_cluster,
+                                                           self.project_structure.genome_blastDB,
+                                                           self.project_structure.BLAST_xml))
     def run(self):
         ### step 1: estimate fasta file and calculate number of chunks needed
 
@@ -148,7 +151,7 @@ class iRAPer():
         # it will return fasta of LTRs (single per cluster)  self.selection_sequence_per_cluster = self.root + "/selected_LTR_sequences.fasta"
 
         ### step 9 BLAST
-
+        showStep("BLAST is going")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Short sample app')
