@@ -1,6 +1,7 @@
 from collections import defaultdict
 from Bio import SeqIO
 import re
+from bin.RT_gyDB_hmm import classification
 class LTR():
     def __init__(self,ID, chromosome, start, end, strand):
         self.ID = ID
@@ -168,14 +169,6 @@ class LtrDiParser():
             domain += dLTRs
             domain_presents.append(",".join(sorted(dLTRs)))
 
-        # print(set(fn))
-        # print(len(set(fn)))
-        # print(set(domain))
-        #
-        # print(len(set(domain_presents)))
-        # for dP in set(domain_presents):
-        #     print(dP, domain_presents.count(dP))
-
     def getAllFull(self):
         cnt = 0
         for ltrs in self.LTRs:
@@ -209,8 +202,7 @@ class LtrDiParser():
 
 
     def getClassification(self):
-        with open(r"RT_classification_gyDB_hmm.tab") as classTab, \
-            open("fullLTRclassification{}".format(self.gff3File.split("/")[-1]), "w") as outfile:
+        with open("{}.fullLTRclassification".format(self.gff3File), "w") as outfile:
             class_d = {}
             class_d['micropia'] = "Ty3/Gypsy"
             class_d['v'] = "Ty3/Gypsy"
@@ -220,11 +212,9 @@ class LtrDiParser():
             class_d['b'] = "Ty3/Gypsy"
             class_d['codi'] = "Ty1/Copia"
             class_d["galea"] = "Ty1/Copia"
+            class_d.update(classification)
 
 
-            for lines in classTab:
-                sp = lines.rstrip().split()
-                class_d[sp[0]] = sp[1]
             for ltrs in self.LTRs:
                 base = "\t".join([ltrs,
                                   self.__getChromosomeId(self.gff3File.split("/")[-1].replace('_',"|")),
@@ -336,10 +326,10 @@ class LtrDiParser():
                 if not(start > ltrs.end and end > ltrs.end) and not (start < ltrs.start and end < ltrs.start):
                     print(ltrs.ID)
     #
-# LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_1.fasta.idx_LtrDi.gff3")
-# LD.findOverlap('CP027625.1', 9055592, 9060554)
+LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_1.fasta.idx_LtrDi.gff3")
+#LD.findOverlap('CP027625.1', 9055592, 9060554)
 # #LD.gff3Tobed()
 # LD.getBEDfileDomains()
 # #LD.getAllfeatureNames()
-#LD.getClassification()
+LD.getClassification()
 # # #LD.getFastaFullLtrs("/home/ilia/RNA_seq_reads_moss/N/Ppatens_318_v3.fa")
