@@ -7,6 +7,7 @@ import argparse
 from Bio import SeqIO
 import os
 from bin import Clustering_LTRs
+from bin.selectCluster_for_iRAP import *
 
 class iRAPer():
     def __init__(self, args):
@@ -29,7 +30,7 @@ class iRAPer():
         :return:
         """
         showMessageLevel("Project structure generation", level=2)
-        project_structure = ProjectStructure(args.out, self.chunks)
+        project_structure = ProjectStructure(args.out, self.chunks, self.genome)
         print(project_structure)
         return project_structure
 
@@ -100,7 +101,11 @@ class iRAPer():
         showInfoMessage("Maximum sequences ({0}) in cluster {1}".format(len(cl.getMaximumCluster()), cl.getMaximumCluster().id))
 
 
-
+    def runBLAST(self):
+        os.system("blastn -query {0} "
+                  "-db /home/ikirov/retrotranscriptome/Genomes/sunflower_HA1.0.fasta -outfmt 5 "
+                  "-out {1} -evalue 0.000001 "
+                  "-window_size 22 -num_threads 20".format(self.project_structure.selection_sequence_per_cluster, self.project_structure.BLAST_xml))
     def run(self):
         ### step 1: estimate fasta file and calculate number of chunks needed
 
@@ -133,7 +138,16 @@ class iRAPer():
         showStep("LTR clustering")
         self.clustering()
 
+        ### step 8: select clusters and sequences from them
+        showStep("Selecting clusters and sequences from them")
+        selectClusters_and_LTRs(self.project_structure.parsed_cd_hit_out,
+                                self.project_structure.insertion_time_tab,
+                                self.project_structure.merged_3,
+                                self.project_structure.selection_tab_cluster,
+                                self.project_structure.selection_sequence_per_cluster)
+        # it will return fasta of LTRs (single per cluster)  self.selection_sequence_per_cluster = self.root + "/selected_LTR_sequences.fasta"
 
+        ### step 9 BLAST
 
 
 if __name__ == "__main__":

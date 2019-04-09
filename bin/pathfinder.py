@@ -4,7 +4,7 @@ functions to make folder structure for iRAPer output
 """
 
 class ProjectStructure:
-    def __init__(self,outDir, chunks):
+    def __init__(self,outDir, chunks, fasta):
         """
         :param outDir: path to out directory
         :param chunks: list od seq.id chunks returned by genomeSplitterIndex function
@@ -22,6 +22,10 @@ class ProjectStructure:
         self.insertion_time_tab = self.root + "/Insertion_time.tab"
         self.cd_hit_results = self.root + "/cdhit.clstr"
         self.parsed_cd_hit_out = self.cd_hit_results + '._parsed.tab'
+        self.selection_tab_cluster = self.root + "/selected_clusters.info"
+        self.selection_sequence_per_cluster = self.root + "/selected_LTR_sequences.fasta"
+        self.genome_blastDB = fasta
+        self.BLAST_xml = "LTR_vs_Genome_blast5fmt.xml"
 
     def _getLTRharvestOutDir(self):
         """

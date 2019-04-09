@@ -1,9 +1,11 @@
-import os
-
 from Bio import SeqIO
+from collections import defaultdict
 from Bio.Seq import Seq
 from Bio.SeqUtils import GC
-from iRAPer import primerTest
+import os
+
+
+from bin import primerTest
 
 
 class parseMafft():
@@ -16,7 +18,7 @@ class parseMafft():
         self.sequence_count = 0
         self.run_mafft = run_mafft
         self.runMafft()
-        self.window = 20
+        self.window = 23
         self.outTable = open(self.mafft_fasta + "oligo_primers.tab", 'w')
         self.writeHeader()
         self.ltr = ltr
@@ -106,8 +108,8 @@ class parseMafft():
                 primer = sequence
                 if self.ltr == 5: # write reverse comlement sequence as a primer
                     primer = str(Seq(primer).reverse_complement())
-                Tm = round(primerTest.calculateTm(primer), 2)
-                if (primer[-1] == 'G' or primer[-1] == 'C') and Tm > 53:
+                Tm = round(primerTest.calculateTm(primer),2)
+                if Tm > 53:
                     self.outTable.write('\t'.join([str(i) for i in [self.mafft_fasta,
                                                    start + 1,
                                                    start + self.window,
@@ -123,4 +125,4 @@ class parseMafft():
                                                    str(self.ltr) + "LTR"]]) + "\n")
 
 
-#parseMafft(r'5LTR_00_unplaced_join_73N_24795102_24803627Cluster25010.fasta', run_mafft=False)
+#parseMafft(r'3LTR_00_unplaced_join_73N_269424152_269433300Cluster824.fasta', run_mafft=False)
