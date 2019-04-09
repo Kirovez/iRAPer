@@ -14,7 +14,8 @@ class ProjectStructure:
         self.outTable = self.root + "/iRAPer_results.tab"
         self.chunks = chunks
         self.tmp_folder = self._isExistCreate(outDir + "/tmp")
-        self.LtrDi_files = []
+        self.classification_TE_path = [] ## path to each classification file made for each gff3 of chunks
+        self.merged_classification_TE_path = self.root + '/classification_TE.info'  ## path to each classification file made for each gff3 of chunks
         self.LTRh_tmp = self._getLTRharvestOutDir() # all LTRharvest files dictionary where chunk is a key
         self.genomes_tmp = self._getGenomeFile() #ids for all genome fasta where chunk is a key\
         self.LTRharvest_gff3 = '_LTRs.gff3'

@@ -202,7 +202,8 @@ class LtrDiParser():
 
 
     def getClassification(self):
-        with open("{}.fullLTRclassification".format(self.gff3File), "w") as outfile:
+        outfile_name = "{}.fullLTRclassification".format(self.gff3File)
+        with open(outfile_name, "w") as outfile:
             class_d = {}
             class_d['micropia'] = "Ty3/Gypsy"
             class_d['v'] = "Ty3/Gypsy"
@@ -216,14 +217,19 @@ class LtrDiParser():
 
 
             for ltrs in self.LTRs:
-                base = "\t".join([ltrs,
-                                  self.__getChromosomeId(self.gff3File.split("/")[-1].replace('_',"|")),
-                                  self.LTRs[ltrs].start, self.LTRs[ltrs].end ])
+                base = "\t".join([ltrs+"<*>"+self.LTRs[ltrs].chromosome,
+                                  self.LTRs[ltrs].chromosome,
+                                  self.LTRs[ltrs].start, self.LTRs[ltrs].end,
+                                  str(self.LTRs[ltrs].isFull()),
+                                  ",".join(self.LTRs[ltrs].getAllFeatures())])
                 if  self.LTRs[ltrs].isFull():
-                    print(self.LTRs[ltrs].ID)
-                    outfile.write(base + "\t" + self.LTRs[ltrs].classify(class_d) + "\t" + class_d[self.LTRs[ltrs].getBestHit("RT")] + "\n")
+                    try:
+                        outfile.write(base+"\t" + self.LTRs[ltrs].classify(class_d) + "\t" + class_d[self.LTRs[ltrs].getBestHit("RT")] + "\n")
+                    except:
+                        outfile.write(base + "\t" + 'truncated TE' + "\t" + 'truncated TE' + "\n")
                 else:
                     outfile.write(base + "\t" + 'truncated TE' + "\t" + 'truncated TE' + "\n")
+        return outfile_name
 
     def getBEDfileDomains(self, from0 = True):
         with open("{}.bed".format(self.gff3File[:-4]), "w") as outfile:
@@ -326,10 +332,11 @@ class LtrDiParser():
                 if not(start > ltrs.end and end > ltrs.end) and not (start < ltrs.start and end < ltrs.start):
                     print(ltrs.ID)
     #
-LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_1.fasta.idx_LtrDi.gff3")
+# LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_1.fasta.idx_LtrDi.gff3")
+# LD.getClassification()
+
 #LD.findOverlap('CP027625.1', 9055592, 9060554)
 # #LD.gff3Tobed()
 # LD.getBEDfileDomains()
 # #LD.getAllfeatureNames()
-LD.getClassification()
 # # #LD.getFastaFullLtrs("/home/ilia/RNA_seq_reads_moss/N/Ppatens_318_v3.fa")

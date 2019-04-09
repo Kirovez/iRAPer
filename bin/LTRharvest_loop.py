@@ -39,6 +39,6 @@ class LTRharvestRun():
         print(ltrDigest_command)
         #os.system(ltrDigest_command)
         LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root))
-        #LD.findOverlap('CP027625.1', 9055592, 9060554)
-        return self.index_name_root + '_3ltr.fas'
+        classificati_file = LD.getClassification()
+        return [self.index_name_root + '_3ltr.fas', classificati_file]
 

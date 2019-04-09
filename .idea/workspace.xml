@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="99a6b9bd-e233-4661-afe0-4bb48936478f" name="Default" comment="Pipeline construction step 2">
-      <change afterPath="$PROJECT_DIR$/bin/RT_gyDB_hmm.py" afterDir="false" />
+    <list default="true" id="99a6b9bd-e233-4661-afe0-4bb48936478f" name="Default" comment="TE classification step">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/LTRharvest_loop.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/LTRharvest_loop.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/LtrDiParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/LtrDiParser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/pathfinder.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/pathfinder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iRAPer.py" beforeDir="false" afterPath="$PROJECT_DIR$/iRAPer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,8 +19,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/iRAPer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="544">
-              <caret line="164" column="31" selection-start-line="164" selection-start-column="8" selection-end-line="164" selection-end-column="31" />
+            <state relative-caret-position="686">
+              <caret line="42" column="30" selection-start-line="42" selection-start-column="8" selection-end-line="42" selection-end-column="30" />
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
               </folding>
@@ -38,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bin/LtrDiParser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="68" selection-start-line="68" selection-end-line="68" />
+            <state relative-caret-position="216">
+              <caret line="224" column="45" selection-start-line="224" selection-start-column="45" selection-end-line="224" selection-end-column="45" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -50,7 +52,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/RT_gyDB_hmm.py">
           <provider selected="true" editor-type-id="text-editor">
             <state>
@@ -74,8 +76,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/LTRharvest_loop.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="428">
-              <caret line="40" column="10" selection-start-line="40" selection-start-column="8" selection-end-line="40" selection-end-column="10" />
+            <state relative-caret-position="462">
+              <caret line="42" column="70" selection-start-line="42" selection-start-column="70" selection-end-line="42" selection-end-column="70" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -110,8 +112,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/pathfinder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="29" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
+            <state relative-caret-position="68">
+              <caret line="16" column="35" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -157,11 +159,11 @@
         <option value="$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py" />
         <option value="$PROJECT_DIR$/bin/screenSelectedLTRbyBLASTgenome.py" />
         <option value="$PROJECT_DIR$/bin/primerTest.py" />
-        <option value="$PROJECT_DIR$/iRAPer.py" />
-        <option value="$PROJECT_DIR$/bin/pathfinder.py" />
-        <option value="$PROJECT_DIR$/bin/LTRharvest_loop.py" />
-        <option value="$PROJECT_DIR$/bin/LtrDiParser.py" />
         <option value="$PROJECT_DIR$/bin/RT_gyDB_hmm.py" />
+        <option value="$PROJECT_DIR$/bin/LTRharvest_loop.py" />
+        <option value="$PROJECT_DIR$/bin/pathfinder.py" />
+        <option value="$PROJECT_DIR$/iRAPer.py" />
+        <option value="$PROJECT_DIR$/bin/LtrDiParser.py" />
       </list>
     </option>
   </component>
@@ -408,7 +410,14 @@
       <option name="project" value="LOCAL" />
       <updated>1554805054758</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="TE classification step">
+      <created>1554805950878</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1554805950878</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -445,7 +454,8 @@
     <MESSAGE value="Pipeline construction step 1" />
     <MESSAGE value="BLAST vs Genome" />
     <MESSAGE value="Pipeline construction step 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Pipeline construction step 2" />
+    <MESSAGE value="TE classification step" />
+    <option name="LAST_COMMIT_MESSAGE" value="TE classification step" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/iRAPer/messager.py" />
@@ -533,16 +543,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-966">
-          <caret line="23" column="16" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/genome_chunk_1.fasta.idx_LtrDi.gff3_modified">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="179">
@@ -570,27 +570,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/pathfinder.py">
+    <entry file="file://$PROJECT_DIR$/genome_chunk_1.fasta.idx_LtrDi.gff3_modified.fullLTRclassification">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/RT_gyDB_hmm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="29" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
+        <state>
+          <caret column="805" selection-start-column="805" selection-end-column="805" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/LTRharvest_loop.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="428">
-          <caret line="40" column="10" selection-start-line="40" selection-start-column="8" selection-end-line="40" selection-end-column="10" />
+        <state relative-caret-position="462">
+          <caret line="42" column="70" selection-start-line="42" selection-start-column="70" selection-end-line="42" selection-end-column="70" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bin/pathfinder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="16" column="35" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-966">
+          <caret line="23" column="16" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/iRAPer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="164" column="31" selection-start-line="164" selection-start-column="8" selection-end-line="164" selection-end-column="31" />
+        <state relative-caret-position="686">
+          <caret line="42" column="30" selection-start-line="42" selection-start-column="8" selection-end-line="42" selection-end-column="30" />
           <folding>
             <element signature="e#0#33#0" expanded="true" />
           </folding>
@@ -599,18 +619,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/LtrDiParser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="68" selection-start-line="68" selection-end-line="68" />
+        <state relative-caret-position="216">
+          <caret line="224" column="45" selection-start-line="224" selection-start-column="45" selection-end-line="224" selection-end-column="45" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/RT_gyDB_hmm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="805" selection-start-column="805" selection-end-column="805" />
         </state>
       </provider>
     </entry>
