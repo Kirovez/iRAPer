@@ -150,8 +150,12 @@ class iRAPer():
                                 self.project_structure.selection_sequence_per_cluster)
         # it will return fasta of LTRs (single per cluster)  self.selection_sequence_per_cluster = self.root + "/selected_LTR_sequences.fasta"
 
-        ### step 9 BLAST
+        ### step 9: BLAST
         showStep("BLAST is going")
+        self.runBLAST()
+
+        ### step 10:
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Short sample app')
