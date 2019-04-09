@@ -1,6 +1,6 @@
 from Bio.SeqUtils import MeltingTemp as mt
 from Bio.Seq import Seq
-import primer3
+#import primer3
 
 def calculateTm(primer):
     return mt.Tm_NN(Seq(primer), Na=50, Tris=10, Mg=2, dNTPs=0.6,saltcorr=7)
@@ -15,10 +15,9 @@ def calculateTm(primer):
 # print(2224 + len('IKCFCSCSKLPFALSTFGKITKLGLHPDVVTFNTLLHGLCVEDR')*3)
 #
 # print(Seq('GGTGAAGCTGTATATATCACA').reverse_complement())
-
-def check(seqPr):
-    print(calculateTm(seqPr))
-    print(primer3.calcHairpin(seqPr))
-    print("Rev_com")
-    print(Seq(seqPr).reverse_complement())
-
+#
+# def check(seqPr):
+#     print(calculateTm(seqPr))
+#     print(primer3.calcHairpin(seqPr))
+#     print("Rev_com")
+#     print(Seq(seqPr).reverse_complement())

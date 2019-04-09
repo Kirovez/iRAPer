@@ -1,16 +1,18 @@
 from collections import defaultdict
 from Bio import SeqIO
 
-def selectClusters_and_LTRs(clstr_tab, ins_tab, ltr_fasta, outFile_tab, outFile_Fasta,
+def selectClusters_and_LTRs(clstr_tab, ins_tab, ltr_fasta3, ltr_fasta5, outFile_tab, outFile_Fasta3, outFile_Fasta5,
                             min_seq_in_cluster = 10,
                             min_percent_young = 70,
                             ins_time_cutoff = 1500000):
-    seq_ind = SeqIO.index(ltr_fasta, "fasta")
+    seq_ind3 = SeqIO.index(ltr_fasta3, "fasta")
+    seq_ind5 = SeqIO.index(ltr_fasta5, "fasta")
 
     with open(clstr_tab) as clstr_t, \
         open(ins_tab) as ins_t, \
-        open(outFile_Fasta, "w") as outFasta, \
-        open(outFile_tab, "w") as out:
+        open(outFile_Fasta3, "w") as outFasta3, \
+            open(outFile_Fasta5, "w") as outFasta5, \
+            open(outFile_tab, "w") as out:
 
 
         ### estimate age
@@ -64,7 +66,8 @@ def selectClusters_and_LTRs(clstr_tab, ins_tab, ltr_fasta, outFile_tab, outFile_
 
                 out.write(
                     "\t".join([clusters, seq_id, str(is_leading), str(len(seq_per_cluster[clusters])), str(round(percent_young,2))]) + "\n")
-                SeqIO.write(seq_ind[seq_id], outFasta, "fasta")
+                SeqIO.write(seq_ind3[seq_id], outFasta3, "fasta")
+                SeqIO.write(seq_ind5[seq_id], outFasta5, "fasta")
         print("Number of clusters after filtering by cluster size and percentage of young TEs in a cluster is {0}".format(cnt))
 #
 # selectClusters_and_LTRs(r'C:\Users\Илья\PycharmProjects\iRAPer\cdhit.clstr._parsed.tab',

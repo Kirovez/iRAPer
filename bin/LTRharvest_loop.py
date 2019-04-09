@@ -1,7 +1,7 @@
 import os
 from bin.messager import *
 from Bio import SeqIO
-#from iRAPer import LtrDiParser as LDP
+from bin.LtrDiParser import *
 
 class LTRharvestRun():
     def __init__(self,genome_fasta):
@@ -38,5 +38,7 @@ class LTRharvestRun():
         )
         print(ltrDigest_command)
         #os.system(ltrDigest_command)
+        LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root))
+        #LD.findOverlap('CP027625.1', 9055592, 9060554)
         return self.index_name_root + '_3ltr.fas'
 

@@ -1,4 +1,5 @@
 from bin.helper_function import *
+from bin.multiAlignGenomeLTRs import RunAndParseClustal
 from bin.pathfinder import ProjectStructure
 from bin.messager import *
 from bin.LTRharvest_loop import LTRharvestRun
@@ -7,6 +8,7 @@ import argparse
 from Bio import SeqIO
 import os
 from bin import Clustering_LTRs
+from bin.screenSelectedLTRbyBLASTgenome import checkLTR_bygBLAST
 from bin.selectCluster_for_iRAP import *
 
 class iRAPer():
@@ -102,13 +104,30 @@ class iRAPer():
 
 
     def runBLAST(self):
-        os.system("makeblastdb -in {0} -out {0}-dbtype nucl".format(self.project_structure.genome_blastDB))
+        os.system("makeblastdb -in {0} -out {0} -dbtype nucl".format(self.project_structure.genome_blastDB))
+        #3'-LTR BLAST
         os.system("blastn -query {0} "
                   "-db {1} -outfmt 5 "
                   "-out {2} -evalue 0.000001 "
-                  "-window_size 22 -num_threads 20".format(self.project_structure.selection_sequence_per_cluster,
+                  "-window_size 22 -num_threads 20".format(self.project_structure.selection_sequence3_per_cluster,
                                                            self.project_structure.genome_blastDB,
-                                                           self.project_structure.BLAST_xml))
+                                                           self.project_structure.BLAST_3LTR_xml))
+        #5'-LTR BLAST
+        os.system("blastn -query {0} "
+                  "-db {1} -outfmt 5 "
+                  "-out {2} -evalue 0.000001 "
+                  "-window_size 22 -num_threads 20".format(self.project_structure.selection_sequence5_per_cluster,
+                                                           self.project_structure.genome_blastDB,
+                                                           self.project_structure.BLAST_5LTR_xml))
+
+    def findLTRsInGenome(self):
+        checkLTR_bygBLAST(
+            self.project_structure.BLAST_3LTR_xml,
+            ltr=3)
+        checkLTR_bygBLAST(
+            self.project_structure.BLAST_3LTR_xml,
+            ltr=5)
+
     def run(self):
         ### step 1: estimate fasta file and calculate number of chunks needed
 
@@ -146,16 +165,38 @@ class iRAPer():
         selectClusters_and_LTRs(self.project_structure.parsed_cd_hit_out,
                                 self.project_structure.insertion_time_tab,
                                 self.project_structure.merged_3,
+                                self.project_structure.merged_5,
                                 self.project_structure.selection_tab_cluster,
-                                self.project_structure.selection_sequence_per_cluster)
+                                self.project_structure.selection_sequence3_per_cluster,
+                                self.project_structure.selection_sequence5_per_cluster)
         # it will return fasta of LTRs (single per cluster)  self.selection_sequence_per_cluster = self.root + "/selected_LTR_sequences.fasta"
 
         ### step 9: BLAST
-        showStep("BLAST is going")
+        showStep("BLAST for selected 3'LTRs and 5'LTRs is going")
         self.runBLAST()
 
-        ### step 10:
+        ### step 10: Collection of LTR similar sequences from genome
+        showStep("Collection of LTR similar sequences from whole genome")
 
+        ltr3_collected_sim_seqs = checkLTR_bygBLAST(
+            self.project_structure.BLAST_3LTR_xml,
+        ltr=3)
+        ltr5_collected_sim_seqs = checkLTR_bygBLAST(
+            self.project_structure.BLAST_5LTR_xml,
+            ltr=5)
+
+        ### step 11: ClustalO multiple alignment of the collected fastas
+        showStep('ClustalO multiple alignment of the collected fastas')
+        print("\n".join(ltr3_collected_sim_seqs.created_fastas))
+        print("////////")
+        print("\n".join(ltr5_collected_sim_seqs.created_fastas))
+        print("////////")
+
+        for i,ltr3_files in enumerate(ltr3_collected_sim_seqs.created_fastas):
+            RunAndParseClustal(ltr3_files, self.project_structure.tmp_folder + "/3LTR_{}.tmp_tab".format(i),ltr=3, run_clustal=True)
+            ltr_5_fasta = ltr3_files.replace("::3::","::5::")
+            ltr_5_fasta = ltr_5_fasta.replace("LTR3", "LTR5")
+            RunAndParseClustal(ltr_5_fasta, self.project_structure.tmp_folder + "/5LTR_{}.tmp_tab".format(i),ltr=5, run_clustal=True)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Short sample app')

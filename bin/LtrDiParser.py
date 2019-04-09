@@ -8,6 +8,7 @@ class LTR():
         self.end = end
         self.chromosome = chromosome
         self.strand = strand
+        self.outGff3 = ''
         self.features = {"LTRharvest":defaultdict(list), "LTRdigest":defaultdict(list)}
 
     def addFeature(self, source, name, chromosome, start, end, evalue):
@@ -145,7 +146,7 @@ class LtrDiParser():
                         start_new_LTR = True
                     elif start_new_LTR:
                         start_new_LTR = False
-                        newLTR = LTR(sp[-1].split("=")[1], sp[0], sp[3], sp[4], sp[6])
+                        newLTR = LTR(sp[-1].split("=")[1], sp[0].split(' ')[0], sp[3], sp[4], sp[6])
                         self.LTRs[newLTR.ID] = newLTR
                     else:
                         if sp[1] == "LTRharvest" or ";name=" not in sp[-1]:
@@ -325,10 +326,20 @@ class LtrDiParser():
                 seq.id = seq.id + "_" + "_".join(seq.description.split(" "))
 
                 SeqIO.write(seq, outfile, "fasta")
-#
-# LD = LtrDiParser(r"LinMin_LtrDi.gff3")
+
+    def findOverlap(self, chromosome, start, end):
+        for ltrs in self.LTRs:
+            ltrs = self.LTRs[ltrs]
+            ltrs.start, ltrs.end = int(ltrs.start), int(ltrs.end)
+            #print(ltrs.ID, ltrs.chromosome)
+            if ltrs.chromosome == chromosome:
+                if not(start > ltrs.end and end > ltrs.end) and not (start < ltrs.start and end < ltrs.start):
+                    print(ltrs.ID)
+    #
+# LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_1.fasta.idx_LtrDi.gff3")
+# LD.findOverlap('CP027625.1', 9055592, 9060554)
 # #LD.gff3Tobed()
 # LD.getBEDfileDomains()
 # #LD.getAllfeatureNames()
-# LD.getClassification()
+#LD.getClassification()
 # # #LD.getFastaFullLtrs("/home/ilia/RNA_seq_reads_moss/N/Ppatens_318_v3.fa")

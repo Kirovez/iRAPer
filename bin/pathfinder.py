@@ -11,7 +11,10 @@ class ProjectStructure:
         :return: dictionary
         """
         self.root = self._isExistCreate(outDir)
+        self.outTable = self.root + "/iRAPer_results.tab"
         self.chunks = chunks
+        self.tmp_folder = self._isExistCreate(outDir + "/tmp")
+        self.LtrDi_files = []
         self.LTRh_tmp = self._getLTRharvestOutDir() # all LTRharvest files dictionary where chunk is a key
         self.genomes_tmp = self._getGenomeFile() #ids for all genome fasta where chunk is a key\
         self.LTRharvest_gff3 = '_LTRs.gff3'
@@ -23,9 +26,13 @@ class ProjectStructure:
         self.cd_hit_results = self.root + "/cdhit.clstr"
         self.parsed_cd_hit_out = self.cd_hit_results + '._parsed.tab'
         self.selection_tab_cluster = self.root + "/selected_clusters.info"
-        self.selection_sequence_per_cluster = self.root + "/selected_LTR_sequences.fasta"
+        self.selection_sequence3_per_cluster = self.root + "/selected_LTR_3_sequences.fasta"
+        self.selection_sequence5_per_cluster = self.root + "/selected_LTR_5_sequences.fasta"
         self.genome_blastDB = fasta
-        self.BLAST_xml = "LTR_vs_Genome_blast5fmt.xml"
+        self.outBLASTdir = self._isExistCreate(self.root + "/BLAST_out")
+        self.BLAST_3LTR_xml = self.outBLASTdir  + "/LTR3_vs_Genome_blast5fmt.xml"
+        self.BLAST_5LTR_xml = self.outBLASTdir + "/LTR5_vs_Genome_blast5fmt.xml"
+
 
     def _getLTRharvestOutDir(self):
         """
