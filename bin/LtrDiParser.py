@@ -125,7 +125,8 @@ class LTR():
 
 class LtrDiParser():
 
-    def __init__(self, gff3File, mask_for_chromosome_id = ".[]0"):
+    def __init__(self, gff3File, mask_for_chromosome_id = ".[]0", sequence_name = None):
+        self.sequence_name = sequence_name
         self.gff3File = self.modifyGff3(gff3File)
         self.LTRs = defaultdict(LTR)
         self.mask_for_chromosome_id = mask_for_chromosome_id ##where split and which index to extract chromosome id from sequence id
@@ -294,28 +295,33 @@ class LtrDiParser():
         with open(LTRharvest_output) as infile, open(outfile_id, "w") as outfile:
             for num, lines in enumerate(infile):
                 if num != 0:
+                    ## pseudo names
                     if lines.startswith("##s"):
                         l1_new_names.append(lines.split(" ")[3].split("seq")[-1])
+                    #real names
                     elif real_name_patter.search(lines):
                         l2_real_names.append(lines.rstrip()[1:])
+                    #blank line
                     elif lines.startswith("###"):
                         outfile.write(lines)
+                    #coordinates
                     else:
+                        if not l2_real_names: #when only one sequence was in gff3 then no real names will be in gff3 file header
+                            l2_real_names.append(self.sequence_name)
+
                         if not real_names_start:
                             l1_new_names = [int(i) for i in l1_new_names]
                             for i,nam in enumerate(sorted(l1_new_names)):
                                 d["seq" + str(nam)] =  l2_real_names[i]
                             real_names_start = True
-
                         sp = lines.split("\t")
                         sp[0] = d[sp[0]]
                         new_line = "\t".join(sp)
                         outfile.write(new_line)
                 else:
                     outfile.write("###")
-
-
         return outfile_id
+
     def changeIDseqs(self, fastafile):
         with open("modifiedIDs_" + fastafile, "w") as outfile:
             for seq in SeqIO.parse(fastafile, "fasta"):
@@ -332,7 +338,7 @@ class LtrDiParser():
                 if not(start > ltrs.end and end > ltrs.end) and not (start < ltrs.start and end < ltrs.start):
                     print(ltrs.ID)
     #
-# LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_1.fasta.idx_LtrDi.gff3")
+#LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_0.fasta.idx_LtrDi.gff3", sequence_name="Chr")
 # LD.getClassification()
 
 #LD.findOverlap('CP027625.1', 9055592, 9060554)

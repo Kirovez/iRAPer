@@ -13,6 +13,23 @@ class LTRharvestRun():
         self.runLTRharvest()
         self.sorted_gff3 = self.sortGff3(self.gff3)
 
+    def isSingleSeqInFile(self):
+        """
+        When only one sequence in fasta file then the gff3 generated will be without real name in header
+        Therefore this nreal name of a sequence must be provided for LtrDiParser as sequence_name
+        :return:
+        """
+        cnt = 0
+        id = ''
+        for seq in SeqIO.parse(self.genome_fasta, 'fasta'):
+            cnt += 1
+            id = seq.id
+
+        if cnt == 1:
+            return id
+        else:
+            return False
+
     def runLTRharvest(self):
         ## three outfiles differ in the format wrtiting: .fa, .gff3 and .fas
         print('gt suffixerator -db {0} -indexname {1} -tis -suf -lcp -des -ssp -sds -dna'.format(self.genome_fasta, self.index_name_root ))
@@ -43,7 +60,12 @@ class LTRharvestRun():
         print(ltrDigest_command)
         if not self.skip:
             os.system(ltrDigest_command)
-        LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root))
+
+        single_id = self.isSingleSeqInFile()
+        if single_id:
+            LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root), sequence_name=id)
+        else:
+            LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root))
         classificati_file = LD.getClassification()
         return [self.index_name_root + '_3ltr.fas', classificati_file]
 
