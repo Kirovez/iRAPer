@@ -1,6 +1,9 @@
 from collections import defaultdict
 from Bio import SeqIO
 import re
+
+from Bio.SeqRecord import SeqRecord
+
 from bin.RT_gyDB_hmm import classification
 class LTR():
     def __init__(self,ID, chromosome, start, end, strand):
@@ -17,6 +20,9 @@ class LTR():
 
     def getBasicInfo(self):
         return [self.ID, self.start, self.end]
+
+    def getLTRs(self):
+        return self.features["LTRharvest"]['long_terminal_repeat']
 
     def getAllFeatures(self):
         toret = []
@@ -269,50 +275,90 @@ class LtrDiParser():
                     else:
                         for ltrs in per_domain[domains_unqiue]:
                             outfile.write("\t".join(ltrs) + "\t" + re + "\n")
+    def get_LTRs_fasta(self, genome):
+        """
+        :return: two LTR fasta files for current genome and LTR sequence
+        """
+        ltr_3_file = genome + ".idx_3ltr.fas"
+        ltr_5_file = genome + ".idx_5ltr.fas"
+        TE_body = genome + ".TE_body.fasta"
+
+        files_ltr_out = [ltr_5_file, ltr_3_file]
+        cnt = 0
+        ltr_dic = defaultdict(list) #'chromosome': [LTR objects]
+        for TEs in self.LTRs:
+            ltr_dic[self.LTRs[TEs].chromosome].append(self.LTRs[TEs])
+        with open(ltr_3_file, 'w') as ltr3, open(ltr_5_file, 'w') as ltr5, open(TE_body, 'w') as out_fasta:
+            for seq in SeqIO.parse(genome, 'fasta'):
+                if seq.id in ltr_dic:
+                    for LTRs in ltr_dic[seq.id]: # iterate through LTRs for this chromosome
+                        coords = LTRs.getLTRs() #[[chr, start, end],[chr, start, end]] for 5 and 3 LTRs
+                        #print(coords)
+                        ltr_id = "{0}_{1}_{2}".format(seq.id, LTRs.start, LTRs.end)
+
+                        # 3' lTR
+                        ltr_3_seq = seq.seq[int(coords[1][1]): int(coords[1][2])]
+                        sr = SeqRecord(ltr_3_seq,id=ltr_id,description="3'-LTR")
+                        SeqIO.write(sr, ltr3, "fasta")
+                        cnt += 1
+
+                        # 5' lTR
+                        ltr_5_seq = seq.seq[int(coords[0][1]): int(coords[0][2])]
+                        sr = SeqRecord(ltr_5_seq, id=ltr_id, description="5'-LTR")
+                        SeqIO.write(sr, ltr5, "fasta")
+
+                        #TE body
+                        te_body= seq.seq[int(LTRs.start): int(LTRs.end)]
+                        sr = SeqRecord(te_body, id=ltr_id, description="TE_predicted")
+                        SeqIO.write(sr, out_fasta, 'fasta')
+        print("Number of LTRs sequences predicted by LTRharvest in fasta file", cnt)
+
+
+
 
 
 
     def modifyGff3(self, LTRharvest_output):
-        """
-        instead of real chromosome name LTharvest put Seq.. names. This function change chromosome and scaffolds names
-        :param LTRharvest_output:
-        :return:
-        """
-        l1_new_names = [] # seq...
-        l2_real_names = [] # Chr...
-        d = {} # number in gff3 annotation : real chromosome name
-        real_name_patter = re.compile("^#[^#]")
-        outfile_id = LTRharvest_output + '_modified'
-        real_names_start = False
-        with open(LTRharvest_output) as infile, open(outfile_id, "w") as outfile:
-            for num, lines in enumerate(infile):
-                if num != 0:
-                    ## pseudo names
-                    if lines.startswith("##s"):
-                        l1_new_names.append(lines.split(" ")[3].split("seq")[-1])
-                    #real names
-                    elif real_name_patter.search(lines):
-                        l2_real_names.append(lines.rstrip()[1:])
-                    #blank line
-                    elif lines.startswith("###"):
-                        outfile.write(lines)
-                    #coordinates
-                    else:
-                        if not l2_real_names: #when only one sequence was in gff3 then no real names will be in gff3 file header
-                            l2_real_names.append(self.sequence_name)
+            """
+            instead of real chromosome name LTharvest put Seq.. names. This function change chromosome and scaffolds names
+            :param LTRharvest_output:
+            :return:
+            """
+            l1_new_names = [] # seq...
+            l2_real_names = [] # Chr...
+            d = {} # number in gff3 annotation : real chromosome name
+            real_name_patter = re.compile("^#[^#]")
+            outfile_id = LTRharvest_output + '_modified'
+            real_names_start = False
+            with open(LTRharvest_output) as infile, open(outfile_id, "w") as outfile:
+                for num, lines in enumerate(infile):
+                    if num != 0:
+                        ## pseudo names
+                        if lines.startswith("##s"):
+                            l1_new_names.append(lines.split(" ")[3].split("seq")[-1])
+                        #real names
+                        elif real_name_patter.search(lines):
+                            l2_real_names.append(lines.rstrip()[1:])
+                        #blank line
+                        elif lines.startswith("###"):
+                            outfile.write(lines)
+                        #coordinates
+                        else:
+                            if not l2_real_names: #when only one sequence was in gff3 then no real names will be in gff3 file header
+                                l2_real_names.append(self.sequence_name)
 
-                        if not real_names_start:
-                            l1_new_names = [int(i) for i in l1_new_names]
-                            for i,nam in enumerate(sorted(l1_new_names)):
-                                d["seq" + str(nam)] =  l2_real_names[i]
-                            real_names_start = True
-                        sp = lines.split("\t")
-                        sp[0] = d[sp[0]]
-                        new_line = "\t".join(sp)
-                        outfile.write(new_line)
-                else:
-                    outfile.write("###")
-        return outfile_id
+                            if not real_names_start:
+                                l1_new_names = [int(i) for i in l1_new_names]
+                                for i,nam in enumerate(sorted(l1_new_names)):
+                                    d["seq" + str(nam)] =  l2_real_names[i]
+                                real_names_start = True
+                            sp = lines.split("\t")
+                            sp[0] = d[sp[0]]
+                            new_line = "\t".join(sp)
+                            outfile.write(new_line)
+                    else:
+                        outfile.write("###\n")
+            return outfile_id
 
     def changeIDseqs(self, fastafile):
         with open("modifiedIDs_" + fastafile, "w") as outfile:
@@ -328,9 +374,13 @@ class LtrDiParser():
             if ltrs.chromosome == chromosome:
                 if not(start > ltrs.end and end > ltrs.end) and not (start < ltrs.start and end < ltrs.start):
                     print(ltrs.ID)
+
+
     #
 #LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_0.fasta.idx_LtrDi.gff3", sequence_name="Chr")
 # LD.getClassification()
+# LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_0.fasta.idx_LTRs.gff3_sorted.gff3", sequence_name='CM007982.2')
+# LD.get_LTRs_fasta(r'C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_0.fasta')
 
 #LD.findOverlap('CP027625.1', 9055592, 9060554)
 # #LD.gff3Tobed()

@@ -14,6 +14,9 @@ class ProjectStructure:
         self.outTable = self.root + "/iRAPer_results.tab"
         self.chunks = chunks
         self.tmp_folder = self._isExistCreate(outDir + "/tmp")
+        self.TE_body = {} # full path to the TE sequences extracted from LTRharvest output
+        self.merged_TE_body = self.root + '/merged_TE.fasta'
+        self.selected_merged_TE_body = self.merged_TE_body[:-6] + "_selected.fasta"
         self.classification_TE_path = [] ## path to each classification file made for each gff3 of chunks
         self.merged_classification_TE_path = self.root + '/classification_TE.info'  ## path to each classification file made for each gff3 of chunks
         self.LTRh_tmp = self._getLTRharvestOutDir() # all LTRharvest files dictionary where chunk is a key
@@ -69,9 +72,10 @@ class ProjectStructure:
             os.system('mkdir {}'.format(directory))
         return directory
 
-    def addLTRfastaPath(self, chunk, ltr_fasta):
+    def addLTRfastaPath(self, chunk):
         self.ltr_3[chunk] = self.genomes_tmp[chunk] + ".idx_3ltr.fas"
         self.ltr_5[chunk] = self.genomes_tmp[chunk] + ".idx_5ltr.fas"
+        self.TE_body[chunk] = self.genomes_tmp[chunk] + ".TE_body.fasta"
 
 
     def __str__(self):

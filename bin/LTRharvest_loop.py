@@ -45,6 +45,18 @@ class LTRharvestRun():
             os.system('gt gff3 -sort {0} > {0}_sorted.gff3'.format(gff3))
         return self.gff3 + '_sorted.gff3'
 
+    def getLTR_from_LTRharvesGff3(self):
+        """
+        :return: will create fasta files for 3' and 5' LTRs and return the full path to them
+        """
+        single_id = self.isSingleSeqInFile()
+        if single_id:
+            LD = LtrDiParser(self.sorted_gff3, sequence_name=single_id).get_LTRs_fasta(self.genome_fasta)
+        else:
+            LD = LtrDiParser(self.sorted_gff3).get_LTRs_fasta(self.genome_fasta)
+
+        return LD
+
     def runLTRdigest(self, trna_fasta, domains_folder):
         index_genome = self.index_name_root
         sorted_gff3 = self.sorted_gff3
@@ -52,20 +64,22 @@ class LTRharvestRun():
         ltrDigest_command = 'gt ltrdigest -force -outfileprefix {0} -o {0}_LtrDi.gff3 -pptlen 10 30 ' \
                             '-pbsoffset 0 3 -trnas {1} -hmms {2} -pdomevalcutoff 0.001 {3} {4}'.format(
             self.index_name_root,
-              trna_fasta,
-              domains_folder,
-              sorted_gff3,
-              index_genome
+            trna_fasta,
+            domains_folder,
+            sorted_gff3,
+            index_genome
         )
         print(ltrDigest_command)
         if not self.skip:
             os.system(ltrDigest_command)
 
         single_id = self.isSingleSeqInFile()
+
         if single_id:
             LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root), sequence_name=single_id)
         else:
             LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root))
         classificati_file = LD.getClassification()
-        return [self.index_name_root + '_3ltr.fas', classificati_file]
+        return classificati_file
+
 
