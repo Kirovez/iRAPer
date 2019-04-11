@@ -15,7 +15,8 @@ def selectBy_isFUll_classification(classification_tab,
     with open(classification_tab) as classification, \
         open(outFasta3, 'w') as out3, \
         open(outFasta5, 'w') as out5:
-
+        ind3 = SeqIO.index(ltr_fasta3, 'fasta')
+        ind5 = SeqIO.index(ltr_fasta5, 'fasta')
         isFull_te = {}
         class_te = {}
 
@@ -25,20 +26,22 @@ def selectBy_isFUll_classification(classification_tab,
             isFull_te[te_id] = isFull
             class_te[te_id] = classification
 
+        print(isFull_te)
+        print(seq_per_cluster)
+        for cluster in seq_per_cluster:
+            isFUll = [isFull_te[id] for id in seq_per_cluster[cluster] if id in isFull_te]
+            full_per_cluster[cluster] = "{0} of {1}".format(isFUll.count('True'), len(isFUll))
 
-    for cluster in selected:
-        isFUll = [isFull_te[id] for id in seq_per_cluster[cluster]]
-        full_per_cluster[cluster] = "{0} of {1}".format(isFUll.count('True'), len(isFUll))
+            classification = [class_te[id] for id in seq_per_cluster[cluster] if id in class_te]
+            classification_per_cluster[cluster] = ";".join([i for i in set(classification)])
+            # select cluster if not all TEs in it are truncated and at least on is full
 
-        classification = [class_te[id] for id in seq_per_cluster[cluster]]
-        classification_per_cluster[cluster] = ";".join([i for i in set(classification)])
-        # select cluster if not all TEs in it are truncated and at least on is full
-
-        print(isFUll.count('True'))
-        print(classification.count("truncated TE"))
-        if isFUll.count('True') > 0 and classification.count("truncated TE") != len(seq_per_cluster[cluster]):
-            TE_class_isFull_selected[cluster] = 0
-
+            # print(isFUll.count('True'))
+            # print(classification.count("truncated TE"))
+            if isFUll.count('True') > 0 and classification.count("truncated TE") != len(seq_per_cluster[cluster]):
+                TE_class_isFull_selected[cluster] = 0
+                SeqIO.write(ind3[cluster_leading_dic[cluster]], out3, 'fasta')
+                SeqIO.write(ind5[cluster_leading_dic[cluster]], out5, 'fasta')
     print("Number of clusters after filtering by TE structure and classification is {0}".format(len(TE_class_isFull_selected)))
 
 def selectClusters_and_LTRs(clstr_tab, ins_tab, outFile_tab,
@@ -91,10 +94,10 @@ def selectClusters_and_LTRs(clstr_tab, ins_tab, outFile_tab,
         print("Number of clusters after filtering by cluster size (>={0}) is {1}".format(min_seq_in_cluster, len(cluster_seqs_age)))
 
 
-
         ### select clusters with percentage of you TE < min_percent_young
         cnt = 0
         selected_Seqs = []
+        new_selected = {}
         out.write("\t".join(["Cluster", "Seq.id", "Is.leading", "Cluster size", "Percentage of young TEs", "Percentage of Full TEs", "Classification"]) + "\n")
         for clusters in cluster_seqs_age:
             percent_young = cluster_seqs_age[clusters].count(True)*100/len(cluster_seqs_age[clusters])
@@ -112,7 +115,7 @@ def selectClusters_and_LTRs(clstr_tab, ins_tab, outFile_tab,
                     print("NO leading sequences", seq_per_cluster[clusters][2])
                     seq_id = seq_per_cluster[clusters][2]
                     selected[clusters] = seq_id
-
+                new_selected[clusters] = seq_per_cluster[clusters]
                 out.write(
                     "\t".join([clusters, seq_id,
                                str(is_leading),
@@ -126,8 +129,8 @@ def selectClusters_and_LTRs(clstr_tab, ins_tab, outFile_tab,
         print("Number of clusters after filtering by cluster size and percentage of young TEs in a cluster is {0}".format(cnt))
 
         return [selected_Seqs,
-                selected,
-                {cluster:seq_per_cluster[cluster] for cluster in selected}] #cluster:sequences
+                selected, #leading sequences
+                {cluster:seq_per_cluster[cluster] for cluster in new_selected}] #cluster:sequences
 # selectClusters_and_LTRs(r'C:\Users\Илья\PycharmProjects\iRAPer\cdhit.clstr._parsed.tab',
 #                         r'C:\Users\Илья\PycharmProjects\iRAPer\Insertion_time.tab',
 #                         r"C:\Users\Илья\PycharmProjects\iRAPer\3_LTR_merged.fasta",

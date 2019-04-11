@@ -9,13 +9,16 @@ from bin import primerTest
 
 
 class RunAndParseClustal():
-    def __init__(self, fasta, outTable, ltr = 3, run_clustal=True):
+    def __init__(self, fasta, outTable, ltr = 3, run_clustal=True, tm_min = 56):
         self.fasta_file = fasta
         self.clustal_fasta = '{0}.cls_fasta'.format(self.fasta_file)
+        self.TE_id = self.clustal_fasta.split("::")[2][:-5]
         self.score = {} # {0: {'a': 107, 't': 0, 'g': 0, 'c': 0, '-': 12}, 1: {'a': 0, 't': 108, 'g': 0, 'c': 0, '-': 11}, 2: {'a': 0, 't': 0, 'g': 0, 'c': 112, '-': 7},
         self.seq_length = 0
         self.sequence_list = []
         self.sequence_count = 0
+        self.tm_min = tm_min
+        self.best = []
         self.run_clustal = run_clustal
         self.runClustal()
         self.window = 23
@@ -55,6 +58,26 @@ class RunAndParseClustal():
             cons_bases.append(base)
         return [cons_bases, cons_score]
 
+    def getBest(self, array):
+        """
+        :return:
+        """
+        all_primers = array
+        tm = [i for i in all_primers if i[-2] > 58]
+        if not tm:
+            return False
+
+        fr = [i for i in all_primers if int(i[-4].split('/')[0]) / int(i[-4].split('/')[0]) > 0.7]
+        if not fr:
+            return False
+        if fr[0][-1].startswith('3'):
+            return [str(i) for i in max(fr, key=lambda x:x[1])]
+        else:
+            return [str(i) for i in min(fr, key=lambda x:x[1])]
+
+
+
+
     def absolutFrequency(self, primer):
         """
         It will count absolute frequency of the primers in sequences used for alignment
@@ -65,12 +88,14 @@ class RunAndParseClustal():
         for seq in self.sequence_list:
             if primer in str(seq):
                 cnt += 1
-
-        return [round(cnt/self.sequence_count,2), '{0}/{1}'.format(cnt, self.sequence_count)]
+        if cnt > 10:
+            return '{0}/{1}'.format(cnt, self.sequence_count)
+        else:
+            return False
 
 
     def writeHeader(self):
-        self.outTable.write('\t'.join(['File',
+        self.outTable.write('\t'.join(['TE',
                                        'Start',
                                        'End',
                                        'Min score',
@@ -79,13 +104,13 @@ class RunAndParseClustal():
                                        'Last base score',
                                        'Sequence',
                                        'Primer',
-                                       'Frequence of the sequence',
                                        'Absolute number of seqs with the primer',
                                        "GC",
                                        "Tm",
                                        'LTR']) + "\n")
 
     def find_regions_for_primers(self, cons_base, cons_score):
+        for_best_estimation = []
         max_score = self.sequence_count*self.window
         cutoff = 0.5
 
@@ -103,8 +128,9 @@ class RunAndParseClustal():
                 if self.ltr == 5: # write reverse comlement sequence as a primer
                     primer = str(Seq(primer).reverse_complement())
                 Tm = round(primerTest.calculateTm(primer),2)
-                if Tm > 53:
-                    self.outTable.write('\t'.join([str(i) for i in [self.clustal_fasta,
+                fr = self.absolutFrequency(sequence)
+                if Tm > self.tm_min and fr:
+                    self.outTable.write('\t'.join([str(i) for i in [self.TE_id,
                                                    start + 1,
                                                    start + self.window,
                                                    min_score_in_window,
@@ -113,10 +139,23 @@ class RunAndParseClustal():
                                                    last_base_score,
                                                    sequence,
                                                    primer,
-                                                   *self.absolutFrequency(sequence),
-                                                                    GC(Seq(primer)),
+                                                   fr,
+                                                    GC(Seq(primer)),
                                                                     Tm,
                                                    str(self.ltr) + "LTR"]]) + "\n")
+                    for_best_estimation.append([self.TE_id,
+                                                   start + 1,
+                                                   start + self.window,
+                                                   min_score_in_window,
+                                                   mean_score_in_window,
+                                                   first_base_score,
+                                                   last_base_score,
+                                                   sequence,
+                                                   primer,
+                                                   fr,
+                                                    GC(Seq(primer)),
+                                                                    Tm,
+                                                   str(self.ltr) + "LTR"])
 
-
+        self.best =  self.getBest(for_best_estimation)
 #parseMafft(r'3LTR_00_unplaced_join_73N_269424152_269433300Cluster824.fasta', run_mafft=False)

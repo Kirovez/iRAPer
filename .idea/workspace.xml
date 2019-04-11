@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="99a6b9bd-e233-4661-afe0-4bb48936478f" name="Default" comment="">
+    <list default="true" id="99a6b9bd-e233-4661-afe0-4bb48936478f" name="Default" comment="iRAPer_v0.1 no_work">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Clustering_LTRs.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Clustering_LTRs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/LTRharvest_loop.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/LTRharvest_loop.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/LtrDiParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/LtrDiParser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/pathfinder.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/pathfinder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/selectCluster_for_iRAP.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/selectCluster_for_iRAP.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/iRAPer.py" beforeDir="false" afterPath="$PROJECT_DIR$/iRAPer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/iRAPer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="175" selection-start-line="175" selection-end-line="175" />
+            <state relative-caret-position="737">
+              <caret line="276" column="51" selection-start-line="276" selection-start-column="45" selection-end-line="276" selection-end-column="51" />
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
               </folding>
@@ -29,12 +29,12 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py">
+        <entry file="file://$PROJECT_DIR$/bin/selectCluster_for_iRAP.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" column="18" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="18" />
+            <state relative-caret-position="64">
+              <caret line="22" column="36" lean-forward="true" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
               <folding>
-                <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#0#35#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -43,8 +43,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/LTRharvest_loop.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1156">
-              <caret line="68" column="26" selection-start-line="68" selection-start-column="26" selection-end-line="68" selection-end-column="26" />
+            <state relative-caret-position="122">
+              <caret line="63" column="41" lean-forward="true" selection-start-line="63" selection-start-column="29" selection-end-line="63" selection-end-column="41" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -67,26 +67,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/Clustering_LTRs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
+            <state relative-caret-position="-286">
               <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cdhit.clstr">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-469514">
-              <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/InsertionTimeEstimation.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="19" column="23" selection-start-line="19" selection-start-column="23" selection-end-line="19" selection-end-column="23" />
+            <state relative-caret-position="340">
+              <caret line="20" column="22" lean-forward="true" selection-start-line="20" selection-start-column="22" selection-end-line="20" selection-end-column="22" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -97,8 +88,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/LtrDiParser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="52" column="31" selection-start-line="52" selection-start-column="31" selection-end-line="52" selection-end-column="31" />
+            <state relative-caret-position="1076">
+              <caret line="205" column="20" selection-start-line="205" selection-start-column="8" selection-end-line="205" selection-end-column="20" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -107,10 +98,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Anaconda3/Lib/site-packages/Bio/Seq.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="207">
+              <caret line="234" selection-start-line="234" selection-end-line="234" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/pathfinder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="27" column="25" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="25" />
+            <state relative-caret-position="207">
+              <caret line="14" selection-start-line="14" selection-end-line="15" />
             </state>
           </provider>
         </entry>
@@ -151,17 +151,17 @@
         <option value="$PROJECT_DIR$/bin/messager.py" />
         <option value="$PROJECT_DIR$/bin/helper_function.py" />
         <option value="$PROJECT_DIR$/bin/parseMafft.py" />
-        <option value="$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py" />
         <option value="$PROJECT_DIR$/bin/screenSelectedLTRbyBLASTgenome.py" />
         <option value="$PROJECT_DIR$/bin/primerTest.py" />
         <option value="$PROJECT_DIR$/bin/RT_gyDB_hmm.py" />
         <option value="$PROJECT_DIR$/bin/InsertionTimeEstimation.py" />
+        <option value="$PROJECT_DIR$/bin/Clustering_LTRs.py" />
+        <option value="$PROJECT_DIR$/bin/LtrDiParser.py" />
+        <option value="$PROJECT_DIR$/bin/LTRharvest_loop.py" />
         <option value="$PROJECT_DIR$/bin/selectCluster_for_iRAP.py" />
         <option value="$PROJECT_DIR$/bin/pathfinder.py" />
-        <option value="$PROJECT_DIR$/bin/LTRharvest_loop.py" />
-        <option value="$PROJECT_DIR$/bin/LtrDiParser.py" />
-        <option value="$PROJECT_DIR$/bin/Clustering_LTRs.py" />
         <option value="$PROJECT_DIR$/iRAPer.py" />
+        <option value="$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py" />
       </list>
     </option>
   </component>
@@ -225,7 +225,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Clustering_LTRs">
+  <component name="RunManager" selected="Python.LtrDiParser">
     <configuration name="Clustering_LTRs" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="iRAPer" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -340,8 +340,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Clustering_LTRs" />
         <item itemvalue="Python.LtrDiParser" />
+        <item itemvalue="Python.Clustering_LTRs" />
         <item itemvalue="Python.selectCluster_for_iRAP" />
         <item itemvalue="Python.iRAPer" />
         <item itemvalue="Python.helper_function" />
@@ -436,7 +436,21 @@
       <option name="project" value="LOCAL" />
       <updated>1554871141670</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="iRAPer_v0.1 first working version">
+      <created>1554963906720</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1554963906743</updated>
+    </task>
+    <task id="LOCAL-00013" summary="iRAPer_v0.1 no_work">
+      <created>1554976855696</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1554976855696</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -475,7 +489,9 @@
     <MESSAGE value="Pipeline construction step 2" />
     <MESSAGE value="TE classification step" />
     <MESSAGE value="Single sequence file ERROR because gff3 without header. Corrected" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="iRAPer_v0.1 first working version" />
+    <MESSAGE value="iRAPer_v0.1 no_work" />
+    <option name="LAST_COMMIT_MESSAGE" value="iRAPer_v0.1 no_work" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/iRAPer/messager.py" />
@@ -560,35 +576,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/selectCluster_for_iRAP.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="105" column="25" selection-start-line="105" selection-start-column="25" selection-end-line="105" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bin/ErrorsGen.py">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="18" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/pathfinder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="27" column="25" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="25" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/InsertionTimeEstimation.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -600,13 +589,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/LTRharvest_loop.py">
+    <entry file="file://$PROJECT_DIR$/bin/ouy">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/genome_chunk_0.fasta.idx_LTRs.gff3_sorted.gff3_modified">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1156">
-          <caret line="68" column="26" selection-start-line="68" selection-start-column="26" selection-end-line="68" selection-end-column="26" />
+        <state relative-caret-position="204">
+          <caret line="831" column="40" selection-start-line="831" selection-start-column="20" selection-end-line="831" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Anaconda3/Lib/site-packages/Bio/Seq.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="234" selection-start-line="234" selection-end-line="234" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdhit.clstr">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-469514">
+          <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/genome_chunk_0.fasta.idx_3ltr.fas">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/genome_chunk_0.fasta.idx_5ltr.fas">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/genome_chunk_0.fasta.TE_body.fasta">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="-110608">
+          <caret selection-end-line="1" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/LtrDiParser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1076">
+          <caret line="205" column="20" selection-start-line="205" selection-start-column="8" selection-end-line="205" selection-end-column="20" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#0#35#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/Clustering_LTRs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-286">
+          <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -620,39 +653,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cdhit.clstr">
+    <entry file="file://$PROJECT_DIR$/bin/pathfinder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-469514">
-          <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+        <state relative-caret-position="207">
+          <caret line="14" selection-start-line="14" selection-end-line="15" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/ouy">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/Clustering_LTRs.py">
+    <entry file="file://$PROJECT_DIR$/bin/selectCluster_for_iRAP.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/LtrDiParser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="52" column="31" selection-start-line="52" selection-start-column="31" selection-end-line="52" selection-end-column="31" />
+        <state relative-caret-position="64">
+          <caret line="22" column="36" lean-forward="true" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bin/LTRharvest_loop.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="63" column="41" lean-forward="true" selection-start-line="63" selection-start-column="29" selection-end-line="63" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/iRAPer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="175" selection-start-line="175" selection-end-line="175" />
+        <state relative-caret-position="737">
+          <caret line="276" column="51" selection-start-line="276" selection-start-column="45" selection-end-line="276" selection-end-column="51" />
           <folding>
             <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/multiAlignGenomeLTRs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="22" lean-forward="true" selection-start-line="20" selection-start-column="22" selection-end-line="20" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>

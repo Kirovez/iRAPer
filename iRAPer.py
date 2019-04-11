@@ -235,8 +235,8 @@ class iRAPer():
 
         showStep('TE domain identification')
         # return classificiation file fullpath
-        classification_TE_tab = LTRharvestRun(self.project_structure.selected_merged_TE_body).runLTRdigest(self.trna, self.profiles)
-
+        classification_TE_tab = LTRharvestRun(self.project_structure.selected_merged_TE_body, skip=self.skip).runLTRdigest(self.trna, self.profiles)
+        showInfoMessage("{} table with TE classification information".format(classification_TE_tab))
         #####
         #it will write two fasts files for 3' LTR and 5' LTR
         selectBy_isFUll_classification(classification_TE_tab,
@@ -260,18 +260,22 @@ class iRAPer():
             self.project_structure.BLAST_5LTR_xml,
             ltr=5)
 
-        ### step 11: ClustalO multiple alignment of the collected fastas
+        ### step 12: ClustalO multiple alignment of the collected fastas
         showStep('ClustalO multiple alignment of the collected fastas')
         print("\n".join(ltr3_collected_sim_seqs.created_fastas))
         print("////////")
         print("\n".join(ltr5_collected_sim_seqs.created_fastas))
         print("////////")
+        with open(self.project_structure.outTableBEST, "w") as outFinal:
+            for i,ltr3_files in enumerate(ltr3_collected_sim_seqs.created_fastas):
+                best_3 = RunAndParseClustal(ltr3_files, self.project_structure.tmp_folder + "/3LTR_{}.tmp_tab".format(i),ltr=3, run_clustal=True).best
+                ltr_5_fasta = ltr3_files.replace("::3::","::5::")
+                ltr_5_fasta = ltr_5_fasta.replace("LTR3", "LTR5")
+                best_5 = RunAndParseClustal(ltr_5_fasta, self.project_structure.tmp_folder + "/5LTR_{}.tmp_tab".format(i),ltr=5, run_clustal=True).best
 
-        for i,ltr3_files in enumerate(ltr3_collected_sim_seqs.created_fastas):
-            RunAndParseClustal(ltr3_files, self.project_structure.tmp_folder + "/3LTR_{}.tmp_tab".format(i),ltr=3, run_clustal=True)
-            ltr_5_fasta = ltr3_files.replace("::3::","::5::")
-            ltr_5_fasta = ltr_5_fasta.replace("LTR3", "LTR5")
-            RunAndParseClustal(ltr_5_fasta, self.project_structure.tmp_folder + "/5LTR_{}.tmp_tab".format(i),ltr=5, run_clustal=True)
+                if best_3 and best_5:
+                    outFinal.write("\t".join(best_3) + "\n")
+                    outFinal.write("\t".join(best_5) + "\n")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Short sample app')
