@@ -13,7 +13,7 @@ class Cluster():
             return False
 
     def append_sequence(self, seq_id):
-        id = seq_id.split("...")[0].split('.')[0]
+        id = seq_id.split("...")[0]
         start, end = seq_id.split('_')[1], seq_id.split('_')[2].split("...")[0]
         self.sequences_ids_in_cl[id] = [seq_id.split("...")[0], start, end, self.isLeadingInCluster(seq_id)]
 
@@ -66,5 +66,5 @@ class CdHit_clustering():
             for clusters in self.Clusters_list:
                 outFile.write(clusters.getLines())
 
-#cl = CdHit_clustering('3_LTR_merged.clstr')
-#print("Maximum sequences ({}) in cluster ".format(len(cl.getMaximumCluster())), cl.getMaximumCluster().id)
+# cl = CdHit_clustering(r'C:\Users\Илья\PycharmProjects\iRAPer\cdhit.clstr','ouy')
+# print("Maximum sequences ({}) in cluster ".format(len(cl.getMaximumCluster())), cl.getMaximumCluster().id)

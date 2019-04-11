@@ -182,6 +182,7 @@ class iRAPer():
                                         self.project_structure.insertion_time_tab)
         showMessageLevel("File {} has been created".format(self.project_structure.insertion_time_tab),
                          level=1)
+
         ############# overlap LTR coordinates (from insertion tab and TE coordinates from ProjectStructure.merged_classification_TE_path
 
         # assign LTRs to TEs

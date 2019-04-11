@@ -63,7 +63,7 @@ class LTRharvestRun():
 
         single_id = self.isSingleSeqInFile()
         if single_id:
-            LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root), sequence_name=id)
+            LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root), sequence_name=single_id)
         else:
             LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root))
         classificati_file = LD.getClassification()

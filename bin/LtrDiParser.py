@@ -98,11 +98,6 @@ class LTR():
                         Len = i[2]
                         current_best = i[0]
 
-            #print(sizes)
-            if len(sizes) > 1:
-                print(self.ID)
-                print(current_best)
-                print(":".join([i for i in set(all_best_evalue)]))
             return current_best
         else:
             return "-"
@@ -175,7 +170,6 @@ class LtrDiParser():
         for ltrs in self.LTRs:
             if self.LTRs[ltrs].isFull():
                 cnt += 1
-        print(cnt)
 
     def getFastaFullLtrs(self, genomeFasta):
         cnt_t = 0
@@ -242,7 +236,6 @@ class LtrDiParser():
                     for al_domains in al_domains_matrix:
                         per_domain[al_domains[-1]].append(al_domains)
 
-                    #print(per_domain["LTR_retrotransposon"][0])
                     start = int(per_domain["LTR_retrotransposon"][0][1])
                     for domains_unqiue in per_domain:
                         if domains_unqiue != "long_terminal_repeat":
@@ -268,7 +261,6 @@ class LtrDiParser():
                 for al_domains in al_domains_matrix:
                     per_domain[al_domains[-1]].append(al_domains)
 
-                #print(per_domain["LTR_retrotransposon"][0])
                 start = int(per_domain["LTR_retrotransposon"][0][1])
                 for domains_unqiue in per_domain:
                     if domains_unqiue != "long_terminal_repeat":
@@ -333,7 +325,6 @@ class LtrDiParser():
         for ltrs in self.LTRs:
             ltrs = self.LTRs[ltrs]
             ltrs.start, ltrs.end = int(ltrs.start), int(ltrs.end)
-            #print(ltrs.ID, ltrs.chromosome)
             if ltrs.chromosome == chromosome:
                 if not(start > ltrs.end and end > ltrs.end) and not (start < ltrs.start and end < ltrs.start):
                     print(ltrs.ID)
