@@ -12,7 +12,7 @@ class RunAndParseClustal():
     def __init__(self, fasta, outTable, ltr = 3, run_clustal=True, tm_min = 56):
         self.fasta_file = fasta
         self.clustal_fasta = '{0}.cls_fasta'.format(self.fasta_file)
-        self.TE_id = self.clustal_fasta.split("::")[2][:-5]
+        self.TE_id = self.fasta_file.split("::")[2][:-5]
         self.score = {} # {0: {'a': 107, 't': 0, 'g': 0, 'c': 0, '-': 12}, 1: {'a': 0, 't': 108, 'g': 0, 'c': 0, '-': 11}, 2: {'a': 0, 't': 0, 'g': 0, 'c': 112, '-': 7},
         self.seq_length = 0
         self.sequence_list = []
@@ -63,11 +63,11 @@ class RunAndParseClustal():
         :return:
         """
         all_primers = array
-        tm = [i for i in all_primers if i[-2] > 58]
+        tm = [i for i in all_primers if i[-2] > 58 and i[-2] < 62]
         if not tm:
             return False
 
-        fr = [i for i in all_primers if int(i[-4].split('/')[0]) / int(i[-4].split('/')[0]) > 0.7]
+        fr = [i for i in tm if int(i[-4].split('/')[0]) / int(i[-4].split('/')[0]) > 0.7]
         if not fr:
             return False
         if fr[0][-1].startswith('3'):
