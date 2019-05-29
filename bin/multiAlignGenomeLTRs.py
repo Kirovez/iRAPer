@@ -12,7 +12,7 @@ class RunAndParseClustal():
     def __init__(self, fasta, outTable, ltr = 3, run_clustal=True, tm_min = 56):
         self.fasta_file = fasta
         self.clustal_fasta = '{0}.cls_fasta'.format(self.fasta_file)
-        self.TE_id = self.fasta_file.split("::")[2][:-5]
+        self.TE_id = self.fasta_file.split("::")[2][:-6]
         self.score = {} # {0: {'a': 107, 't': 0, 'g': 0, 'c': 0, '-': 12}, 1: {'a': 0, 't': 108, 'g': 0, 'c': 0, '-': 11}, 2: {'a': 0, 't': 0, 'g': 0, 'c': 112, '-': 7},
         self.seq_length = 0
         self.sequence_list = []
@@ -57,24 +57,6 @@ class RunAndParseClustal():
             cons_score.append(score_base)
             cons_bases.append(base)
         return [cons_bases, cons_score]
-
-    def getBest(self, array):
-        """
-        :return:
-        """
-        all_primers = array
-        tm = [i for i in all_primers if i[-2] > 58 and i[-2] < 62]
-        if not tm:
-            return False
-
-        fr = [i for i in tm if int(i[-4].split('/')[0]) / int(i[-4].split('/')[0]) > 0.7]
-        if not fr:
-            return False
-        if fr[0][-1].startswith('3'):
-            return [str(i) for i in max(fr, key=lambda x:x[1])]
-        else:
-            return [str(i) for i in min(fr, key=lambda x:x[1])]
-
 
 
 
@@ -140,22 +122,15 @@ class RunAndParseClustal():
                                                    sequence,
                                                    primer,
                                                    fr,
-                                                    GC(Seq(primer)),
+                                                    round(GC(Seq(primer)),1),
                                                                     Tm,
                                                    str(self.ltr) + "LTR"]]) + "\n")
-                    for_best_estimation.append([self.TE_id,
+                    for_best_estimation.append([self.TE_id, primer,
                                                    start + 1,
                                                    start + self.window,
-                                                   min_score_in_window,
-                                                   mean_score_in_window,
-                                                   first_base_score,
-                                                   last_base_score,
-                                                   sequence,
-                                                   primer,
                                                    fr,
-                                                    GC(Seq(primer)),
+                                                round(GC(Seq(primer)), 1),
                                                                     Tm,
                                                    str(self.ltr) + "LTR"])
-
-        self.best =  self.getBest(for_best_estimation)
+        self.best = for_best_estimation
 #parseMafft(r'3LTR_00_unplaced_join_73N_269424152_269433300Cluster824.fasta', run_mafft=False)

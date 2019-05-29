@@ -131,6 +131,7 @@ class LtrDiParser():
         self.gff3File = self.modifyGff3(gff3File)
         self.LTRs = defaultdict(LTR)
         self.mask_for_chromosome_id = mask_for_chromosome_id ##where split and which index to extract chromosome id from sequence id
+        self.TE_classification_tab = {} #te_id:[chromosome, start, end, length, classification]
         self.run()
 
     def run(self):
@@ -223,13 +224,20 @@ class LtrDiParser():
                                   self.LTRs[ltrs].start, self.LTRs[ltrs].end,
                                   str(self.LTRs[ltrs].isFull()),
                                   ",".join(self.LTRs[ltrs].getAllFeatures())])
+                #te_id: [chromosome, start, end, length, classification]
+                self.TE_classification_tab[self.LTRs[ltrs].chromosome] = [self.LTRs[ltrs].chromosome,self.LTRs[ltrs].start, self.LTRs[ltrs].end,
+                                                                          abs(int(self.LTRs[ltrs].start) - int(self.LTRs[ltrs].end))]
                 if  self.LTRs[ltrs].isFull():
                     try:
                         outfile.write(base+"\t" + self.LTRs[ltrs].classify(class_d) + "\t" + class_d[self.LTRs[ltrs].getBestHit("RT")] + "\n")
+                        self.TE_classification_tab[self.LTRs[ltrs].chromosome].append(self.LTRs[ltrs].classify(class_d))
                     except:
                         outfile.write(base + "\t" + 'truncated TE' + "\t" + 'truncated TE' + "\n")
+                        self.TE_classification_tab[self.LTRs[ltrs].chromosome].append('truncated TE')
                 else:
                     outfile.write(base + "\t" + 'truncated TE' + "\t" + 'truncated TE' + "\n")
+                    self.TE_classification_tab[self.LTRs[ltrs].chromosome].append('truncated TE')
+
         return outfile_name
 
     def getBEDfileDomains(self, from0 = True):
@@ -377,7 +385,7 @@ class LtrDiParser():
 
 
     #
-#LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_0.fasta.idx_LtrDi.gff3", sequence_name="Chr")
+#LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\bin\ERR2093905_LtrDi.gff3", sequence_name="Chr")
 # LD.getClassification()
 # LD = LtrDiParser(r"C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_0.fasta.idx_LTRs.gff3_sorted.gff3", sequence_name='CM007982.2')
 # LD.get_LTRs_fasta(r'C:\Users\Илья\PycharmProjects\iRAPer\genome_chunk_0.fasta')

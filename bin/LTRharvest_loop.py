@@ -10,6 +10,7 @@ class LTRharvestRun():
         self.index_id = self.index_name_root.split('/')[-1]
         self.gff3 = self.index_name_root + '_LTRs.gff3'
         self.skip = skip
+        self.TE_classification_tab = {}
         self.runLTRharvest()
         self.sorted_gff3 = self.sortGff3(self.gff3)
 
@@ -80,6 +81,7 @@ class LTRharvestRun():
         else:
             LD = LtrDiParser('{0}_LtrDi.gff3'.format(self.index_name_root))
         classificati_file = LD.getClassification()
+        self.TE_classification_tab = LD.TE_classification_tab
         return classificati_file
 
 

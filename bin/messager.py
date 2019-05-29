@@ -10,3 +10,6 @@ def showStep(message):
 
 def showMessageLevel(message, level=1):
     print("{0} {1}".format("*"*(4-level), message))
+
+def showWarning(message):
+    print("WARNING! {0}".format(message))

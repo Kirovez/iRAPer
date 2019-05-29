@@ -12,13 +12,14 @@ class LTR_InsertionTimeCalculator():
     r - mutation rate 1.3*10-8 (Ma and Bennetzen, 2004)
     """
 
-    def __init__(self, fasta_LTR_left, fasta_LTR_right, outFile_tab):
+    def __init__(self, fasta_LTR_left, fasta_LTR_right, outFile_tab, skip):
         self.fasta_LTR_left = fasta_LTR_left
         self.fasta_LTR_right = SeqIO.index(fasta_LTR_right, "fasta")
         self.r_parameter = 9.4E-09
         self.clustalW2 = "clustalw"
         self.outFile_tab = outFile_tab
         self.ins_time = {}
+        self.skip = skip
         self.run()
 
     def run(self):
@@ -26,19 +27,26 @@ class LTR_InsertionTimeCalculator():
         cnd_paired = 0
         ins_time = {}
         print("r", self.r_parameter)
-        with open(self.outFile_tab, "w") as outfile:
-            for seq1 in SeqIO.parse(self.fasta_LTR_left, "fasta"):
-                cnt_l += 1
-                #print("Sequence ", cnt_l)
-                if seq1.id in self.fasta_LTR_right:
-                    cnd_paired +=1
-                    seq2 = self.fasta_LTR_right[seq1.id]
-                    insertion_time = self.align2sequnces(seq1, seq2) # it will align and parse the aligned sequences to insertion time calculation
-                    outfile.write(seq2.id + "\t" + str(insertion_time) + "\n")
-                    ins_time[seq2.id] = str(insertion_time)
+        if self.skip:
+            with open(self.outFile_tab) as outfile:
+                for lines in outfile:
+                    sp = lines.rstrip().split('\t')
+                    ins_time[sp[0]] = sp[1]
+                    cnd_paired += 1
+        else:
+            with open(self.outFile_tab, "w") as outfile:
+                for seq1 in SeqIO.parse(self.fasta_LTR_left, "fasta"):
+                    cnt_l += 1
+                    #print("Sequence ", cnt_l)
+                    if seq1.id in self.fasta_LTR_right:
+                        cnd_paired +=1
+                        seq2 = self.fasta_LTR_right[seq1.id]
+                        insertion_time = self.align2sequnces(seq1, seq2) # it will align and parse the aligned sequences to insertion time calculation
+                        outfile.write(seq2.id + "\t" + str(insertion_time) + "\n")
+                        ins_time[seq2.id] = str(insertion_time)
             print("Number of sequences in left file: ", cnt_l)
             print("Number of sequences in right file: ", len(self.fasta_LTR_right))
-            print("Number of valid pairs found: ", cnd_paired)
+        print("Number of valid pairs found: ", cnd_paired)
         self.ins_time = ins_time
 
     def align2sequnces(self,seq1, seq2):

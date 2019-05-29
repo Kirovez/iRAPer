@@ -7,7 +7,8 @@ def selectBy_isFUll_classification(classification_tab,
                                    ltr_fasta5,
                                    outFasta3,
                                    outFasta5):
-    """return two fasta file with 3 and 5 end LTRs for BLAST with """
+    """return two fasta file with 3 and 5 end LTRs for BLAST """
+
     #######filter by classification and isFull
     TE_class_isFull_selected = {}
     full_per_cluster = {}
@@ -43,6 +44,7 @@ def selectBy_isFUll_classification(classification_tab,
                 SeqIO.write(ind3[cluster_leading_dic[cluster]], out3, 'fasta')
                 SeqIO.write(ind5[cluster_leading_dic[cluster]], out5, 'fasta')
     print("Number of clusters after filtering by TE structure and classification is {0}".format(len(TE_class_isFull_selected)))
+
 
 def selectClusters_and_LTRs(clstr_tab, ins_tab, outFile_tab,
                             min_seq_in_cluster = 10,
@@ -96,7 +98,7 @@ def selectClusters_and_LTRs(clstr_tab, ins_tab, outFile_tab,
 
         ### select clusters with percentage of you TE < min_percent_young
         cnt = 0
-        selected_Seqs = []
+        selected_Seqs = {}
         new_selected = {}
         out.write("\t".join(["Cluster", "Seq.id", "Is.leading", "Cluster size", "Percentage of young TEs", "Percentage of Full TEs", "Classification"]) + "\n")
         for clusters in cluster_seqs_age:
@@ -104,7 +106,7 @@ def selectClusters_and_LTRs(clstr_tab, ins_tab, outFile_tab,
             if percent_young > min_percent_young and clusters in selected:
                 cnt += 1
                 is_leading = True
-                selected_Seqs += seq_per_cluster[clusters]
+                selected_Seqs.update({seq_id:clusters for seq_id in seq_per_cluster[clusters]})
                 # if leading sequence is available for this cluster take one
                 if clusters in selected:
                     print("leading sequence: ",selected[clusters])

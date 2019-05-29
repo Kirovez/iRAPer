@@ -153,6 +153,60 @@ class iRAPer():
                 classification_dictionary[sp[0]] = sp[0],sp[1],int(sp[2]),int(sp[3]),sp[4],sp[6]  # TE_id, chromosome, start, end, isFull, classification
         return classification_dictionary
 
+    def getTEline(self, te_class_item):
+        """
+        input: list from self.Te_classification dictionary
+                chromosome, start, end, length, classification
+        :return: line for writing in final file
+        """
+
+        chromosome, start, end = te_class_item[0].split('_')
+        return "\t".join([str(i) for i in [chromosome, start, end, te_class_item[3], te_class_item[4]]])
+
+    def getBest(self, ltr5_primers, ltr3_primers):
+        """
+        :return:
+        """
+        showMessageLevel("BEST PRIMER PAIR SELECTION for {}".format(ltr5_primers[0][0]),level=1)
+        tm_frequency_sel = [] ## [[ [primer1_3LTR_array],[primer2_3LTR_array]....],[[primer1_5LTR_array],[..],[..] ..] ]
+        for array in [ltr5_primers,ltr3_primers]:
+            #[self.TE_id,
+            # primer,
+            #    start + 1,
+            #    start + self.window,
+            #    primer,
+            #    fr,
+            # round(GC(Seq(primer)), 1),
+            #                     Tm,
+            #    str(self.ltr) + "LTR"]
+            ## Tm filtration
+            tm = [i for i in array if i[-2] > 58 and i[-2] < 62]
+            if not tm:
+                showWarning("Tm value is not appropriate for this TE {}. NO best primers will be catched for this TE".format(array[0]))
+                return False
+
+            ## primer occurency frequency filtration
+            fr = [i for i in tm if int(i[-4].split('/')[0]) / int(i[-4].split('/')[0]) > 0.7]
+            if not fr:
+                showWarning("Primer occurency frequency . NO best primers will be catched for this TE")
+                return False
+            tm_frequency_sel.append(fr)
+
+        # find not_overlapping_pairs
+        sel_pairs = []
+        for primers5 in tm_frequency_sel[0]:
+            for primer3 in tm_frequency_sel[1]:
+                if int(primers5[3]) < int(primer3[2]):
+                    sel_pairs.append([primers5,primer3])
+        if not sel_pairs:
+            showWarning("No primers with appropriate order found. NO best primers will be catched for this TE")
+            return False
+        ## select pairs with maximum distance between the primer
+        bes_pair = max(sel_pairs, key=lambda x: abs(int(x[0][3]) - int(x[1][2])))
+        return bes_pair
+
+    def __listTostr(self, list_inp):
+        return ([str(i) for i in list_inp])
 
     def run(self):
         ### step 1: estimate fasta file and calculate number of chunks needed
@@ -178,38 +232,21 @@ class iRAPer():
 
         ### step 6: estimate insertion time
         showStep("insertion time estimation")
-        if not self.skip:
-            LTR_InsertionTimeCalculator(self.project_structure.merged_3,
-                                        self.project_structure.merged_5,
-                                        self.project_structure.insertion_time_tab)
+        self.ins_time = LTR_InsertionTimeCalculator(self.project_structure.merged_3,
+                                    self.project_structure.merged_5,
+                                    self.project_structure.insertion_time_tab,
+                                    self.skip).ins_time
         showMessageLevel("File {} has been created".format(self.project_structure.insertion_time_tab),
                          level=1)
 
-        #
-        # ############# overlap LTR coordinates (from insertion tab and TE coordinates from ProjectStructure.merged_classification_TE_path
-        #
-        # # assign LTRs to TEs
-        # TE_classification = self.getClassification()
-        # ltrs_isFull = {}
-        # ltrs_Classification = {}
-        # with open(self.project_structure.insertion_time_tab) as ins_tab:
-        #     for ltrs in ins_tab:
-        #         ltrs = ltrs.split("\t")[0]
-        #         ids = ltrs.split("_")
-        #         chromosome, start, end = ids[0], ids[-2], ids[-1]
-        #         over = self.findOverlap(chromosome, int(start), int(end), TE_classification)
-        #         TE_id, chromosome, start, end, isFull, classification = over
-        #         ltrs_isFull[ltrs] = isFull
-        #         ltrs_Classification[ltrs] = classification
-        #         self.LTRs_to_TEs[ltrs] = TE_id, chromosome, start, end, isFull, classification
-        # #############
+
 
         ### step 7: clustering of 3’ LTR sequences by CD-HIT
         showStep("LTR clustering")
         self.clustering()
 
         ### step 8: select clusters and sequences from them
-        showStep("Selecting clusters and sequences")
+        showStep("Selecting clusters based on TE age and cluster size")
 
         seq_ids, cluster_leading_dic, seq_per_cluster = \
             selectClusters_and_LTRs(self.project_structure.parsed_cd_hit_out,
@@ -220,22 +257,26 @@ class iRAPer():
 
         ### step 9: SELECTION BASED ON TE structure ###
         #### merge TE bodies ###
+        showStep('Selecting clusters and sequences based on TE stricture and annotation')
         os.system(
             'cat {0} > {1}'.format(' '.join([self.project_structure.TE_body[i] for i in self.project_structure.TE_body]),
                                    self.project_structure.merged_TE_body))
 
         ##select only TE bodies that are in selected clusters
         cnt =0
+        selected_TEs = {} # TE id : SeqRecord
         with open(self.project_structure.selected_merged_TE_body, "w") as outFile:
             for seq in SeqIO.parse(self.project_structure.merged_TE_body, 'fasta'):
                 if seq.id in seq_ids:
                     SeqIO.write(seq, outFile, 'fasta')
+                    selected_TEs[seq.id] = seq
                     cnt +=1
         showInfoMessage("{0} TE sequences from selected clusters have been written in a file {1} for LTRdigest run".format(cnt, self.project_structure.selected_merged_TE_body))
 
         showStep('TE domain identification')
         # return classificiation file fullpath
-        classification_TE_tab = LTRharvestRun(self.project_structure.selected_merged_TE_body, skip=self.skip).runLTRdigest(self.trna, self.profiles)
+        LD_TE_body = LTRharvestRun(self.project_structure.selected_merged_TE_body, skip=self.skip)
+        classification_TE_tab = LD_TE_body.runLTRdigest(self.trna, self.profiles)
         showInfoMessage("{} table with TE classification information".format(classification_TE_tab))
         #####
         #it will write two fasts files for 3' LTR and 5' LTR
@@ -261,21 +302,53 @@ class iRAPer():
             ltr=5)
 
         ### step 12: ClustalO multiple alignment of the collected fastas
-        showStep('ClustalO multiple alignment of the collected fastas')
+        showStep('final step: >>>> iRAP primer design')
         print("\n".join(ltr3_collected_sim_seqs.created_fastas))
         print("////////")
         print("\n".join(ltr5_collected_sim_seqs.created_fastas))
         print("////////")
-        with open(self.project_structure.outTableBEST, "w") as outFinal:
+        cnt_best_pair = 0
+        with open(self.project_structure.outTableBEST, "w") as outFinal, \
+            open(self.project_structure.TE_fastaBEST, "w") as outFASTA:
+            outFinal.write("\t".join(["TE id","Primer",
+                                      "Start", "End",
+                                      "Expected/Available number of loci aligned",
+                                      "GC", "Tm", "LTR",
+                                     "TE_chromosome", "TE_start", "TE_end", "TE_length","TE_classification", "TE_insertion_time", "Cluster"
+                                      ]) + "\n")
             for i,ltr3_files in enumerate(ltr3_collected_sim_seqs.created_fastas):
-                best_3 = RunAndParseClustal(ltr3_files, self.project_structure.tmp_folder + "/3LTR_{}.tmp_tab".format(i),ltr=3, run_clustal=True).best
+                showMessageLevel("Alignment of the LTR sequences and primer design for {0} of {1} sequences".format(i,len(ltr3_collected_sim_seqs.created_fastas)),level=2)
+                best_3 = RunAndParseClustal(ltr3_files, self.project_structure.tmp_folder + "/3LTR_{}.tmp_tab".format(i),ltr=3, run_clustal=self.skip != True)
                 ltr_5_fasta = ltr3_files.replace("::3::","::5::")
                 ltr_5_fasta = ltr_5_fasta.replace("LTR3", "LTR5")
-                best_5 = RunAndParseClustal(ltr_5_fasta, self.project_structure.tmp_folder + "/5LTR_{}.tmp_tab".format(i),ltr=5, run_clustal=True).best
+                best_5 = RunAndParseClustal(ltr_5_fasta, self.project_structure.tmp_folder + "/5LTR_{}.tmp_tab".format(i),ltr=5, run_clustal=self.skip != True)
+                showMessageLevel('',level=2)
 
-                if best_3 and best_5:
-                    outFinal.write("\t".join(best_3) + "\n")
-                    outFinal.write("\t".join(best_5) + "\n")
+                if best_5.best and best_3.best:
+                    best_pair = self.getBest(best_5.best, best_3.best)
+                    if best_pair:
+                        cnt_best_pair += 1
+                        best_5_pr, best_3_pr = best_pair
+
+                        # add information about TE
+                        best_5_pr.append(self.getTEline(LD_TE_body.TE_classification_tab[best_5_pr[0]]))
+
+                        # add insertion time information
+                        best_5_pr.append(self.ins_time[best_5_pr[0]])
+
+                        # add cluster number
+                        best_5_pr.append(seq_ids[best_5_pr[0]])
+
+                        #### for 5' LTR just add blank because it is the same TE
+                        best_3_pr.append('\t'.join(['-' for i in range(6) ]))
+
+
+                        outFinal.write("\t".join(self.__listTostr(best_5_pr)) + "\n")
+                        outFinal.write("\t".join(self.__listTostr(best_3_pr)) + "\n")
+
+                        SeqIO.write(selected_TEs[best_3_pr[0]], outFASTA, "fasta")
+
+        showInfoMessage('FINAL SET OF PRIMERS SELECTED CONTAINS {} PRIMER PAIRS. More primer variants can be found in /tmp folder'.format(cnt_best_pair))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Short sample app')

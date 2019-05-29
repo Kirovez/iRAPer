@@ -13,6 +13,7 @@ class ProjectStructure:
         self.root = self._isExistCreate(outDir)
         self.outTable = self.root + "/iRAPer_results.tab"
         self.outTableBEST = self.root + "/BEST_PRIMERS_iRAPer_results.tab"
+        self.TE_fastaBEST = self.root + "/TE_BEST.fasta"
         self.chunks = chunks
         self.tmp_folder = self._isExistCreate(outDir + "/tmp")
         self.TE_body = {} # full path to the TE sequences extracted from LTRharvest output
